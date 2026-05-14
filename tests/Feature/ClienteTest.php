@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Cliente;
 use App\Models\Pedido;
+use Database\Seeders\ClientesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ClienteTest extends TestCase
@@ -82,5 +83,36 @@ class ClienteTest extends TestCase
         $this->assertCount(2, $cliente->pedidos);
         $this->assertTrue($cliente->pedidos->contains($pedido1));
         $this->assertTrue($cliente->pedidos->contains($pedido2));
+    }
+
+    public function test_seeder_crea_clientes_de_prueba()
+    {
+        $this->seed(ClientesSeeder::class);
+
+        $this->assertDatabaseCount('clientes', 5);
+        $this->assertDatabaseHas('clientes', [
+            'canal_distribucion' => 'exportación',
+        ]);
+    }
+
+    public function test_cliente_puede_tener_contacto_opcional()
+    {
+        $cliente = Cliente::factory()->create([
+            'contacto' => null,
+        ]);
+
+        $this->assertNull($cliente->contacto);
+        $this->assertNotNull($cliente->nombre);
+    }
+
+    public function test_puede_ver_detalle_de_cliente_con_sus_pedidos()
+    {
+        $cliente = Cliente::factory()->create();
+        Pedido::factory()->count(2)->for($cliente)->create();
+
+        $response = $this->get(route('clientes.show', $cliente));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('cliente');
     }
 }
