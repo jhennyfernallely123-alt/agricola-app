@@ -1,58 +1,67 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema de Gestión Agrícola
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de información para la gestión integral de una hacienda agrícola, desarrollado con **Laravel 13** y **Eloquent ORM**, aplicando **Diseño Guiado por el Dominio (DDD)** y **Contextos Delimitados (Bounded Contexts)**.
 
-## About Laravel
+## Integrantes del Equipo
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Nombre | Rol |
+|--------|-----|
+| Jhennyfer Nallely Arevalo Naranjo | Desarrolladora - Historia de Usuario 1: Gestión de Pedidos |
+| Luis Daniel Obando Betancurt | Desarrollador - Historia de Usuario 2: Gestión de Clientes |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Contextos Delimitados (Bounded Contexts)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Gestión de Cultivo** — Producción agrícola (parcelas, cultivos, labores agrícolas)
+2. **Venta y Distribución** — Comercialización (clientes, pedidos, facturación)
+3. **Gestión de Recursos** — Soporte operativo (personal, maquinaria, finanzas)
 
-## Learning Laravel
+## Historias de Usuario
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Historia de Usuario 1: Gestión de Pedidos
+- Crear, consultar, actualizar y eliminar pedidos
+- Cambio de estado: pendiente → en proceso → enviado → entregado
+- Asociación con clientes, transportes y productos
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Historia de Usuario 2: Gestión de Clientes
+- Crear, consultar, actualizar y eliminar clientes
+- Validaciones de datos obligatorios
+- Visualización de pedidos por cliente
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Pruebas Unitarias
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php vendor/bin/phpunit
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**33 pruebas** — **63 afirmaciones** (mínimo 3 pruebas por modelo)
 
-## Contributing
+| Modelo | Pruebas |
+|--------|---------|
+| Cliente | 7 pruebas |
+| Pedido | 8 pruebas |
+| Factura | 4 pruebas |
+| Producto | 5 pruebas |
+| Relaciones | 7 pruebas |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Instalación
 
-## Code of Conduct
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Luego abrir http://localhost:8000 en el navegador.
 
-## Security Vulnerabilities
+## Ramas de Git
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `main` — Versión estable del proyecto
+- `develop` — Rama de integración
+- `feature/HU-1-gestion-pedidos` — Historia de Usuario 1
+- `feature/HU-2-gestion-clientes` — Historia de Usuario 2
 
-## License
+## Repositorio en GitHub
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[https://github.com/jhennyfernallely123-alt/agricola-app](https://github.com/jhennyfernallely123-alt/agricola-app)
