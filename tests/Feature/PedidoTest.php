@@ -33,7 +33,7 @@ class PedidoTest extends TestCase
 
     public function test_puede_consultar_lista_de_pedidos()
     {
-        $cliente = Cliente::factory()->create();
+        $cliente = Cliente::factory()->create(['nombre' => 'Carlos Alberto Martínez']);
         Pedido::factory()->count(3)->for($cliente)->create();
 
         $response = $this->get(route('pedidos.index'));
@@ -44,7 +44,7 @@ class PedidoTest extends TestCase
 
     public function test_puede_actualizar_estado_de_pendiente_a_en_proceso()
     {
-        $pedido = Pedido::factory()->for(Cliente::factory())->create([
+        $pedido = Pedido::factory()->for(Cliente::factory()->create(['nombre' => 'María Eugenia Rodríguez']))->create([
             'estado' => 'pendiente',
         ]);
 
@@ -58,7 +58,7 @@ class PedidoTest extends TestCase
 
     public function test_no_puede_cancelar_un_pedido_entregado()
     {
-        $pedido = Pedido::factory()->for(Cliente::factory())->create([
+        $pedido = Pedido::factory()->for(Cliente::factory()->create(['nombre' => 'Laura Cristina Mendoza']))->create([
             'estado' => 'entregado',
         ]);
 
@@ -80,8 +80,8 @@ class PedidoTest extends TestCase
 
     public function test_pedido_puede_tener_productos_asociados()
     {
-        $cliente = Cliente::factory()->create();
-        $producto = ProductoTerminado::factory()->create();
+        $cliente = Cliente::factory()->create(['nombre' => 'Distribuidora Agrícola Colombia SAS']);
+        $producto = ProductoTerminado::factory()->create(['nombre' => 'Tomate Chonto']);
 
         $response = $this->post(route('pedidos.store'), [
             'cliente_id' => $cliente->id,
@@ -97,7 +97,7 @@ class PedidoTest extends TestCase
 
     public function test_pedido_tiene_relacion_con_cliente()
     {
-        $cliente = Cliente::factory()->create();
+        $cliente = Cliente::factory()->create(['nombre' => 'Andrés Felipe López']);
         $pedido = Pedido::factory()->for($cliente)->create();
 
         $this->assertInstanceOf(Cliente::class, $pedido->cliente);
@@ -106,8 +106,10 @@ class PedidoTest extends TestCase
 
     public function test_pedido_puede_tener_factura()
     {
-        $pedido = Pedido::factory()->for(Cliente::factory())->create();
-        $factura = Factura::factory()->for($pedido)->create();
+        $pedido = Pedido::factory()->for(Cliente::factory()->create(['nombre' => 'Frutas del Campo SAS']))->create();
+        $factura = Factura::factory()->for($pedido)->create([
+            'numero_factura' => 'FAC-DEMO-001',
+        ]);
 
         $this->assertInstanceOf(Factura::class, $pedido->factura);
         $this->assertEquals($factura->id, $pedido->factura->id);

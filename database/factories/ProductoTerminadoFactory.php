@@ -12,7 +12,7 @@ class ProductoTerminadoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => fake()->randomElement(['Tomate', 'Lechuga', 'Zanahoria', 'Papa', 'Cebolla', 'Maíz']),
+            'nombre' => fake()->randomElement(['Tomate', 'Lechuga', 'Uva', 'Mora', 'Manzana', 'Zanahoria', 'Cebolla Larga', 'Cebolla de Huevo', 'Yuca', 'Repollo', 'Ajo']),
             'variedad' => fake()->randomElement(['Premium', 'Estándar', 'Económico']),
             'presentacion' => fake()->randomElement(['Bolsa 1kg', 'Caja 5kg', 'Saco 25kg', 'Canasta 10kg']),
             'lote' => 'L-' . fake()->unique()->numerify('####'),

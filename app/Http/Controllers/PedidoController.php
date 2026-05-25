@@ -21,7 +21,7 @@ class PedidoController extends Controller
     {
         $clientes = Cliente::all();
         $transportes = Transporte::all();
-        $productos = ProductoTerminado::all();
+        $productos = ProductoTerminado::with('inventario')->get();
         return view('pedidos.create', compact('clientes', 'transportes', 'productos'));
     }
 
@@ -34,12 +34,28 @@ class PedidoController extends Controller
             'transporte_id' => 'nullable|exists:transportes,id',
             'productos' => 'nullable|array',
             'productos.*' => 'exists:productos,id',
+            'cantidades' => 'nullable|array',
+            'cantidades.*' => 'numeric|min:0',
         ]);
 
         $pedido = Pedido::create($validated);
 
         if ($request->has('productos')) {
-            $pedido->productos()->attach($request->productos);
+            $pivotData = [];
+            foreach ($request->productos as $productoId) {
+                $cantidad = $request->cantidades[$productoId] ?? 0;
+
+                // Validar stock
+                $inventario = \App\Models\InventarioProductos::where('producto_id', $productoId)->first();
+                if ($inventario && $cantidad > $inventario->cantidad_disponible) {
+                    $producto = \App\Models\ProductoTerminado::find($productoId);
+                    return back()->withInput()
+                        ->withErrors(['productos' => "Stock insuficiente para {$producto->nombre}. Disponible: {$inventario->cantidad_disponible} kg, solicitado: {$cantidad} kg."]);
+                }
+
+                $pivotData[$productoId] = ['cantidad' => $cantidad];
+            }
+            $pedido->productos()->attach($pivotData);
         }
 
         return redirect()->route('pedidos.index')
@@ -56,7 +72,8 @@ class PedidoController extends Controller
     {
         $clientes = Cliente::all();
         $transportes = Transporte::all();
-        $productos = ProductoTerminado::all();
+        $productos = ProductoTerminado::with('inventario')->get();
+        $pedido->load(['productos' => fn($q) => $q->withPivot('cantidad')]);
         return view('pedidos.edit', compact('pedido', 'clientes', 'transportes', 'productos'));
     }
 
@@ -69,12 +86,35 @@ class PedidoController extends Controller
             'transporte_id' => 'nullable|exists:transportes,id',
             'productos' => 'nullable|array',
             'productos.*' => 'exists:productos,id',
+            'cantidades' => 'nullable|array',
+            'cantidades.*' => 'numeric|min:0',
         ]);
 
         $pedido->update($validated);
 
         if ($request->has('productos')) {
-            $pedido->productos()->sync($request->productos);
+            $pivotData = [];
+            foreach ($request->productos as $productoId) {
+                $cantidad = $request->cantidades[$productoId] ?? 0;
+
+                // Validar stock (solo si aumentó respecto a lo que ya tenía)
+                $originalCantidad = $pedido->productos()
+                    ->wherePivot('producto_id', $productoId)
+                    ->first()?->pivot->cantidad ?? 0;
+
+                if ($cantidad > $originalCantidad) {
+                    $inventario = \App\Models\InventarioProductos::where('producto_id', $productoId)->first();
+                    $stockRestante = ($inventario?->cantidad_disponible ?? 0) + $originalCantidad;
+                    if ($cantidad > $stockRestante) {
+                        $producto = \App\Models\ProductoTerminado::find($productoId);
+                        return back()->withInput()
+                            ->withErrors(['productos' => "Stock insuficiente para {$producto->nombre}. Disponible: {$stockRestante} kg, solicitado: {$cantidad} kg."]);
+                    }
+                }
+
+                $pivotData[$productoId] = ['cantidad' => $cantidad];
+            }
+            $pedido->productos()->sync($pivotData);
         } else {
             $pedido->productos()->detach();
         }

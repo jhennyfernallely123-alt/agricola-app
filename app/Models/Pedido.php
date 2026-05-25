@@ -61,7 +61,7 @@ class Pedido extends Model
             'pedido_producto',
             'pedido_id',
             'producto_id'
-        )->withTimestamps();
+        )->withPivot('cantidad')->withTimestamps();
     }
 
     /**

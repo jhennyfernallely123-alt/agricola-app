@@ -14,15 +14,15 @@ class ClienteTest extends TestCase
     public function test_puede_crear_un_cliente_con_nombre_contacto_y_canal()
     {
         $response = $this->post(route('clientes.store'), [
-            'nombre' => 'Juan Pérez',
-            'contacto' => 'juan@email.com',
+            'nombre' => 'Carlos Alberto Martínez',
+            'contacto' => 'carlos.martinez@gmail.com',
             'canal_distribucion' => 'directo',
         ]);
 
         $response->assertRedirect(route('clientes.index'));
         $this->assertDatabaseHas('clientes', [
-            'nombre' => 'Juan Pérez',
-            'contacto' => 'juan@email.com',
+            'nombre' => 'Carlos Alberto Martínez',
+            'contacto' => 'carlos.martinez@gmail.com',
             'canal_distribucion' => 'directo',
         ]);
     }
@@ -44,13 +44,14 @@ class ClienteTest extends TestCase
         ]);
 
         $response = $this->put(route('clientes.update', $cliente), [
-            'nombre' => 'Nombre Actualizado',
-            'contacto' => $cliente->contacto,
+            'nombre' => 'María Eugenia Rodríguez',
+            'contacto' => 'maria.rodriguez@hotmail.com',
             'canal_distribucion' => $cliente->canal_distribucion,
         ]);
 
         $response->assertRedirect(route('clientes.index'));
-        $this->assertEquals('Nombre Actualizado', $cliente->fresh()->nombre);
+        $this->assertEquals('María Eugenia Rodríguez', $cliente->fresh()->nombre);
+        $this->assertEquals('maria.rodriguez@hotmail.com', $cliente->fresh()->contacto);
     }
 
     public function test_no_puede_eliminar_cliente_con_pedidos_asociados()

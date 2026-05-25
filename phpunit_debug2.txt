@@ -1,0 +1,16 @@
+﻿
+
+An error occurred inside PHPUnit.
+
+Message:  syntax error, unexpected token "\"
+Location: D:\Documentos\laboratorio soft\agricola-app\tests\Feature\DebugUpdateTest.php:18
+
+#0 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\Runner\TestSuiteLoader.php(49): PHPUnit\Runner\TestSuiteLoader->loadSuiteClassFile()
+#1 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\Framework\TestSuite.php(237): PHPUnit\Runner\TestSuiteLoader->load()
+#2 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\TextUI\Configuration\Xml\TestSuiteMapper.php(104): PHPUnit\Framework\TestSuite->addTestFile()
+#3 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\TextUI\Configuration\TestSuiteBuilder.php(75): PHPUnit\TextUI\XmlConfiguration\TestSuiteMapper->map()
+#4 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\TextUI\Application.php(389): PHPUnit\TextUI\Configuration\TestSuiteBuilder->build()
+#5 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\src\TextUI\Application.php(196): PHPUnit\TextUI\Application->buildTestSuite()
+#6 D:\Documentos\laboratorio soft\agricola-app\vendor\phpunit\phpunit\phpunit(104): PHPUnit\TextUI\Application->run()
+#7 D:\Documentos\laboratorio soft\agricola-app\vendor\bin\phpunit(122): include('...')
+#8 {main}
